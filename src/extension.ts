@@ -1,30 +1,70 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import { window } from "vscode";
+import { convertors } from "./convertors";
+import { Convertor } from "./types/Convertor";
+import { ConvertorArgument } from "./types/ConvertorArguments";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log(
-    'Congratulations, your extension "code-convertor" is now active!'
-  );
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
-    "code-convertor.helloWorld",
-    () => {
-      // The code you place here will be executed every time your command is executed
-      // Display a message box to the user
-      vscode.window.showInformationMessage("Hello World from code convertor!");
-    }
-  );
+	let disposable = vscode.commands.registerCommand(
+		"code-convertor.quickConvert",
+		() => quickConvert(context)
+	);
 
-  context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
+
+function quickConvert(context: vscode.ExtensionContext) {
+	const quickPick = window.createQuickPick<
+		{ key: string } & vscode.QuickPickItem
+	>();
+	let selected: string;
+  let isSelectEnd :boolean = false;
+  let convertor:Convertor;
+	quickPick.items = Object.entries(convertors).map(
+		([key, { label, description }]) => ({
+			label,
+			description,
+			key,
+		})
+	);
+	quickPick.onDidChangeSelection((selection) => {
+		if (selection[0]) {
+			selected = selection[0].key;
+			console.log(selected);
+		}
+	});
+	quickPick.onDidAccept(() => {
+		if (!vscode.window.activeTextEditor) return;
+		const convertor = convertors[selected];
+
+		const { document, selection, edit } = vscode.window.activeTextEditor;
+		const text = document.getText(selection);
+		console.log(text, selection);
+		edit((editBuilder) =>
+			editBuilder.replace(selection, convertor.convert(text))
+		);
+
+		// quickPick.dispose();
+	});
+	quickPick.onDidHide(() => quickPick.dispose());
+	quickPick.show();
+}
+
+/* function getConvertorArgs(
+	quickPick: vscode.QuickPick<vscode.QuickPickItem>,
+	arg: ConvertorArgument
+) {
+	switch (arg.type) {
+		case "input":
+			//TODO
+			break;
+		case "list":
+    quickPick.items:
+    break
+		default:
+			break;
+	}
+} */

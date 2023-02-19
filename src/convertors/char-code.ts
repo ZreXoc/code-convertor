@@ -1,24 +1,32 @@
+import { fromCharCode, toCharCode } from "../core/char-code";
 import { Convertor } from "../types/Convertor";
+import { createConvertor } from "../utils/createConvertor";
 
-export const toCharCode: Convertor = {
-	name: "to char code",
-	description: "",
-	convert(s) {
-		const result = [];
-		for (let i = 0; i < s.length; i++) {
-			result.push(s.charCodeAt(i));
-		}
-		return result.join(" ");
-	},
-};
+export const toCharCodeConvertor = createConvertor({
+	label: "to char code",
+	convert: toCharCode,
+});
 
-export const fromCharCode: Convertor = {
-	name: "from char code",
-	description: "",
-	convert(s) {
-		return s.replace(/[0-9]+/g, (code) => String.fromCharCode(+code));
-	},
+export const fromCharCodeConvertor = createConvertor({
+	label: "from char code",
+	convert: fromCharCode,
 	expect: {
 		match: /[0-9]+/,
 	},
-};
+	args: [
+		{
+			type: "list",
+			name: "withSpace",
+			choice: [
+				{
+					label: "no space",
+					value: false,
+				},
+				{
+					label: "split with space",
+					value: true,
+				},
+			],
+		},
+	],
+});

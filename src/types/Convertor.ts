@@ -1,5 +1,8 @@
+import { ConvertorArgument } from "./ConvertorArguments";
+
 export type Convertor = {
-	name: string;
+	token: symbol;
+	label: string;
 	description?: string;
 
 	convert: (s: string, option?: Record<string, any>) => string;
@@ -10,6 +13,7 @@ export type Convertor = {
 			| RegExp
 			| ((s: string, option: Record<string, any>) => boolean);
 	};
+	args?: ConvertorArgument[];
 };
 
 export type Collections = {
