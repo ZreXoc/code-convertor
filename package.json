@@ -16,8 +16,15 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "code-convertor.helloWorld",
-				"title": "Hello World"
+				"command": "code-convertor.quickConvert",
+				"title": "quick convert"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "code-convertor.quickConvert",
+				"key": "ctrl+k q",
+				"when": "editorTextFocus"
 			}
 		]
 	},
@@ -42,5 +49,8 @@
 		"mocha": "^10.1.0",
 		"nyc": "^15.1.0",
 		"typescript": "^4.9.4"
+	},
+	"dependencies": {
+		"js-base64": "^3.7.5"
 	}
 }

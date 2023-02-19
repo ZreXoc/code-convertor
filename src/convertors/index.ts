@@ -1,7 +1,10 @@
 import { Convertor } from "../types/Convertor";
-import { toCharCode, fromCharCode } from "./char-code";
+import { toCharCodeConvertor, fromCharCodeConvertor } from "./char-code";
+import { toBase64Convertor, fromBase64Convertor } from "./base64";
 
 export const convertors: Record<string, Convertor> = {
-	toCharCode,
-	fromCharCode,
+	toCharCodeConvertor,
+	fromCharCodeConvertor,
+	toBase64Convertor,
+	fromBase64Convertor,
 };
